@@ -1,3 +1,8 @@
+para correr el proyecto debes ubicarte en la carpeta Proyecto_POO: 
+```javac -cp .;lib/mysql-connector-j-9.3.0.jar src\Main.java -d src```
+```java -cp "src;lib/mysql-connector-j-9.3.0.jar" src.Main```
+
+para crear la bd: 
 ```
 -- Crear base de datos
 CREATE DATABASE sistema_inventario;
