@@ -31,7 +31,7 @@ public class ProductoDAO {
                 );
                 productos.add(producto);
             }
-        }
+        } catch(SQLDataException )
         return productos;
     }
 
