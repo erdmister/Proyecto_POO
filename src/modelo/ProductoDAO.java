@@ -113,12 +113,12 @@ public class ProductoDAO {
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, "%" + criterio + "%");
             
-            // Intenta convertir el criterio a número para búsqueda por ID
+            /** Intenta convertir el criterio a número para búsqueda por ID*/
             try {
                 int id = Integer.parseInt(criterio);
                 stmt.setInt(2, id);
             } catch (NumberFormatException e) {
-                stmt.setInt(2, -1); // Valor que no coincidirá con ningún ID
+                stmt.setInt(2, -1); /** Valor que no coincidirá con ningún ID*/
             }
             
             try (ResultSet rs = stmt.executeQuery()) {
