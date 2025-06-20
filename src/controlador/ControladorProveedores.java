@@ -1,7 +1,7 @@
-package controlador;
+package src.controlador;
 
-import modelo.*;
-import vista.*;
+import src.modelo.*;
+import src.vista.*;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -125,7 +125,7 @@ public class ControladorProveedores {
      */
     private boolean validarDatosProveedor(Proveedor proveedor) {
         return proveedor.getNombre() != null && !proveedor.getNombre().isEmpty() &&
-               proveedor.getRuc() != null && !proveedor.getRuc().isEmpty();
+               proveedor.getRfc() != null && !proveedor.getRfc().isEmpty();
     }
 
     /**

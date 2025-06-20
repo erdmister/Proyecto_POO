@@ -1,7 +1,7 @@
-package controlador;
+package src.controlador;
 
-import modelo.*;
-import vista.*;
+import src.modelo.*;
+import src.vista.*;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -148,5 +148,25 @@ public class ControladorPersonal {
         }
         
         vistaPersonal.mostrarError(mensaje);
+    }
+	
+	public void editarEmpleado(Empleado empleado) {
+        try {
+            // Validar datos antes de editar
+            if (!validarDatosEmpleado(empleado)) {
+                vistaPersonal.mostrarError("Datos del empleado incompletos o inválidos");
+                return;
+            }
+            boolean exito = empleadoDAO.actualizarEmpleado(empleado);
+            
+            if (exito) {
+                vistaPersonal.mostrarMensaje("Empleado editado exitosamente");
+                actualizarListaEmpleados();
+            } else {
+                vistaPersonal.mostrarError("No se pudo editar el empleado");
+            }
+        } catch (SQLException e) {
+            manejarErrorSQL(e, "editar empleado");
+        }
     }
 }

@@ -1,7 +1,7 @@
-package vista;
+package src.vista;
 
-import controlador.*;
-import modelo.*;
+import src.controlador.*;
+import src.modelo.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -18,6 +18,14 @@ public class VistaProveedores {
     private JButton botonRegresar;
     private ControladorProveedores controlador;
     private DefaultTableModel modeloTabla;
+
+    // Campos para el formulario de agregar/editar proveedor
+    private JTextField campoNombre;
+    private JTextField campoRfc;
+    private JTextField campoTelefono;
+    private JTextField campoEmail;
+    private JTextField campoDireccion;
+    private JTextArea areaProductos;
 
     public VistaProveedores() {
         inicializarComponentes();
@@ -97,7 +105,7 @@ public class VistaProveedores {
             Object[] fila = {
                 proveedor.getId(),
                 proveedor.getNombre(),
-                proveedor.getRuc(),
+                proveedor.getRfc(),
                 proveedor.getTelefono(),
                 proveedor.getEmail(),
                 productos.length() > 50 ? productos.substring(0, 47) + "..." : productos
@@ -114,18 +122,18 @@ public class VistaProveedores {
         dialogo.setLocationRelativeTo(frame);
 
         // Componentes del formulario
-        JTextField campoNombre = new JTextField();
-        JTextField campoRuc = new JTextField();
-        JTextField campoTelefono = new JTextField();
-        JTextField campoEmail = new JTextField();
-        JTextField campoDireccion = new JTextField();
-        JTextArea areaProductos = new JTextArea(3, 20);
+        campoNombre = new JTextField();
+        campoRfc = new JTextField();
+        campoTelefono = new JTextField();
+        campoEmail = new JTextField();
+        campoDireccion = new JTextField();
+        areaProductos = new JTextArea(3, 20);
         areaProductos.setLineWrap(true);
         JScrollPane scrollProductos = new JScrollPane(areaProductos);
 
         // Agregar componentes al diálogo
         agregarCampo(dialogo, "Nombre:", campoNombre);
-        agregarCampo(dialogo, "RUC:", campoRuc);
+        agregarCampo(dialogo, "RUC:", campoRfc);
         agregarCampo(dialogo, "Teléfono:", campoTelefono);
         agregarCampo(dialogo, "Email:", campoEmail);
         agregarCampo(dialogo, "Dirección:", campoDireccion);
@@ -137,7 +145,7 @@ public class VistaProveedores {
         botonGuardar.addActionListener(ev -> {
             Proveedor nuevo = new Proveedor();
             nuevo.setNombre(campoNombre.getText());
-            nuevo.setRuc(campoRuc.getText());
+            nuevo.setRfc(campoRfc.getText());
             nuevo.setTelefono(campoTelefono.getText());
             nuevo.setEmail(campoEmail.getText());
             nuevo.setDireccion(campoDireccion.getText());
@@ -221,5 +229,18 @@ public class VistaProveedores {
 
     public void setControlador(ControladorProveedores controlador) {
         this.controlador = controlador;
+    }
+	
+    public void limpiarFormulario() {
+        // Limpiar los campos del formulario
+        if (campoNombre != null) campoNombre.setText("");
+        if (campoRfc != null) campoRfc.setText("");
+        if (campoTelefono != null) campoTelefono.setText("");
+        if (campoEmail != null) campoEmail.setText("");
+        if (campoDireccion != null) campoDireccion.setText("");
+        if (areaProductos != null) areaProductos.setText("");
+        
+        // Opcional: Deseleccionar proveedor en tabla
+        tablaProveedores.clearSelection();
     }
 }

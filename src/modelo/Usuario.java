@@ -1,19 +1,19 @@
-package modelo;
+package src.modelo;
 
 public class Usuario {
     private String nombreUsuario;
-    private String contraseña;
+    private String contrasenia;
     private String rol;
     
-    public Usuario(String nombreUsuario, String contraseña, String rol) {
+    public Usuario(String nombreUsuario, String contrasenia, String rol) {
         this.nombreUsuario = nombreUsuario;
-        this.contraseña = contraseña;
+        this.contrasenia = contrasenia;
         this.rol = rol;
     }
     
     // Autenticación básica comparando strings directamente (solo para desarrollo)
-    public boolean autenticar(String contraseñaIngresada) {
-        return this.contraseña.equals(contraseñaIngresada);
+    public boolean autenticar(String contraseniaIngresada) {
+        return this.contrasenia.equals(contraseniaIngresada);
     }
     
     public String obtenerRol() {
@@ -25,8 +25,8 @@ public class Usuario {
         return nombreUsuario;
     }
     
-    public String getContraseña() {
-        return contraseña;
+    public String getContrasenia() {
+        return contrasenia;
     }
     
     public String getRol() {

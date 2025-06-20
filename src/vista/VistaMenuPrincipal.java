@@ -1,11 +1,8 @@
-package vista;
+package src.vista;
 
-import controlador.*;
-import modelo.*;
+import src.controlador.ControladorPrincipal; // Asegúrate de que la importación sea correcta
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class VistaMenuPrincipal {
     private JFrame frame;
@@ -34,42 +31,22 @@ public class VistaMenuPrincipal {
         // Botón de Inventario
         botonInventario = new JButton("Gestión de Inventario");
         botonInventario.setFont(new Font("Arial", Font.BOLD, 14));
-        botonInventario.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onInventarioClick();
-            }
-        });
+        botonInventario.addActionListener(e -> onInventarioClick());
 
         // Botón de Ventas
         botonVentas = new JButton("Gestión de Ventas");
         botonVentas.setFont(new Font("Arial", Font.BOLD, 14));
-        botonVentas.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onVentasClick();
-            }
-        });
+        botonVentas.addActionListener(e -> onVentasClick());
 
         // Botón de Personal
         botonPersonal = new JButton("Gestión de Personal");
         botonPersonal.setFont(new Font("Arial", Font.BOLD, 14));
-        botonPersonal.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onPersonalClick();
-            }
-        });
+        botonPersonal.addActionListener(e -> onPersonalClick());
 
         // Botón de Proveedores
         botonProveedores = new JButton("Gestión de Proveedores");
         botonProveedores.setFont(new Font("Arial", Font.BOLD, 14));
-        botonProveedores.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onProveedoresClick();
-            }
-        });
+        botonProveedores.addActionListener(e -> onProveedoresClick());
 
         // Agregar botones al panel
         panelBotones.add(botonInventario);

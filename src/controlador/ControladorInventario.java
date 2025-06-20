@@ -1,7 +1,10 @@
-package controlador;
+package src.controlador;
 
-import modelo.*;
+import src.modelo.*;
+import src.vista.*;
 import java.util.List;
+import java.sql.SQLException;
+
 
 public class ControladorInventario {
     private ProductoDAO productoDAO;

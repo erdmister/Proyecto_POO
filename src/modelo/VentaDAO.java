@@ -1,4 +1,4 @@
-package modelo;
+package src.modelo;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,7 +24,8 @@ public class VentaDAO {
             
             try (PreparedStatement stmt = conexion.prepareStatement(sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
                 stmt.setTimestamp(1, new Timestamp(venta.getFecha().getTime()));
-                stmt.setDouble(2, venta.getTotal());
+                // Aquí no se establece el total, ya que se calculará automáticamente
+                stmt.setDouble(2, venta.getTotal()); // Puedes dejar esto si necesitas el total en la base de datos
                 stmt.setInt(3, venta.getEmpleadoId());
                 stmt.setString(4, venta.getMetodoPago());
                 
@@ -88,7 +89,6 @@ public class VentaDAO {
                     Venta venta = new Venta();
                     venta.setId(rs.getInt("id"));
                     venta.setFecha(rs.getTimestamp("fecha"));
-                    venta.setTotal(rs.getDouble("total"));
                     venta.setEmpleadoId(rs.getInt("empleado_id"));
                     venta.setMetodoPago(rs.getString("metodo_pago"));
                     

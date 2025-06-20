@@ -1,12 +1,11 @@
-package vista;
+package src.vista;
 
-import controlador.*;
-import modelo.*;
+import src.controlador.*;
+import src.modelo.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class VistaInventario {
@@ -25,8 +24,8 @@ public class VistaInventario {
     }
 
     private void inicializarComponentes() {
-        // Configuracin de la ventana
-        frame = new JFrame("Gestin de Inventario");
+        // Configuración de la ventana
+        frame = new JFrame("Gestión de Inventario");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(800, 500);
         frame.setLayout(new BorderLayout(10, 10));
@@ -95,7 +94,7 @@ public class VistaInventario {
     }
 
     private void onAgregarClick() {
-        // Dilogo para agregar nuevo producto
+        // Diálogo para agregar nuevo producto
         JDialog dialogo = new JDialog(frame, "Agregar Producto", true);
         dialogo.setLayout(new GridLayout(6, 2, 5, 5));
         dialogo.setSize(400, 300);
@@ -121,7 +120,7 @@ public class VistaInventario {
         botonConfirmar.addActionListener(e -> {
             try {
                 Producto nuevo = new Producto(
-                    0, // ID se genera automticamente
+                    0, // ID se genera automáticamente
                     campoNombre.getText(),
                     Double.parseDouble(campoPrecio.getText()),
                     Double.parseDouble(campoCosto.getText()),
@@ -163,7 +162,7 @@ public class VistaInventario {
         int stock = (int) modeloTabla.getValueAt(filaSeleccionada, 4);
         java.sql.Date fechaCaducidad = (java.sql.Date) modeloTabla.getValueAt(filaSeleccionada, 5);
 
-        // Dilogo para editar producto
+        // Diálogo para editar producto
         JDialog dialogo = new JDialog(frame, "Editar Producto", true);
         dialogo.setLayout(new GridLayout(6, 2, 5, 5));
         dialogo.setSize(400, 300);
@@ -174,7 +173,16 @@ public class VistaInventario {
         JTextField campoStock = new JTextField(String.valueOf(stock));
         JTextField campoFecha = new JTextField(fechaCaducidad.toString());
 
-        // (Agregar componentes al dilogo igual que en onAgregarClick)
+        dialogo.add(new JLabel("Nombre:"));
+        dialogo.add(campoNombre);
+        dialogo.add(new JLabel("Precio:"));
+        dialogo.add(campoPrecio);
+        dialogo.add(new JLabel("Costo:"));
+        dialogo.add(campoCosto);
+        dialogo.add(new JLabel("Stock:"));
+        dialogo.add(campoStock);
+        dialogo.add(new JLabel("Fecha Caducidad (yyyy-mm-dd):"));
+        dialogo.add(campoFecha);
 
         JButton botonConfirmar = new JButton("Guardar");
         botonConfirmar.addActionListener(e -> {
@@ -198,7 +206,12 @@ public class VistaInventario {
             }
         });
 
-        // (Agregar botn cancelar y mostrar dilogo)
+        JButton botonCancelar = new JButton("Cancelar");
+        botonCancelar.addActionListener(e -> dialogo.dispose());
+
+        dialogo.add(botonConfirmar);
+        dialogo.add(botonCancelar);
+        dialogo.setVisible(true);
     }
 
     private void onEliminarClick() {
@@ -214,8 +227,8 @@ public class VistaInventario {
 
         int confirmacion = JOptionPane.showConfirmDialog(
             frame, 
-            "Est seguro de eliminar el producto: " + nombre + "?", 
-            "Confirmar Eliminacin", 
+            "¿Está seguro de eliminar el producto: " + nombre + "?", 
+            "Confirmar Eliminación", 
             JOptionPane.YES_NO_OPTION
         );
 
@@ -233,7 +246,7 @@ public class VistaInventario {
     }
 
     public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(frame, mensaje, "Informacin", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(frame, mensaje, "Información", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void mostrarError(String mensaje) {
@@ -242,5 +255,13 @@ public class VistaInventario {
 
     public void setControlador(ControladorInventario controlador) {
         this.controlador = controlador;
+    }
+	
+    public void limpiarFormulario() {
+        // Limpiar la tabla de productos
+        modeloTabla.setRowCount(0);
+        
+        // Opcional: mostrar todos los productos nuevamente
+        // controlador.mostrarTodosProductos();
     }
 }

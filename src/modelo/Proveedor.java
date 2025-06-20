@@ -1,4 +1,4 @@
-package modelo;
+package src.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +44,11 @@ public class Proveedor {
         this.nombre = nombre;
     }
 
-    public String getrfc() {
+    public String getRfc() {
         return rfc;
     }
 
-    public void setrfc(String rfc) {
+    public void setRfc(String rfc) {
         this.rfc = rfc;
     }
 

@@ -1,7 +1,7 @@
-package controlador;
+package src.controlador;
 
-import modelo.*;
-import vista.*;
+import src.modelo.*;
+import src.vista.*;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;

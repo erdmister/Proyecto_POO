@@ -1,7 +1,7 @@
-package vista;
+package src.vista;
 
-import controlador.*;
-import modelo.*;
+import src.controlador.*;
+import src.modelo.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 public class VistaLogin {
     private JFrame frame;
     private JTextField campoUsuario;
-    private JPasswordField campoContraseña;
+    private JPasswordField campoContrasenia;
     private JButton botonLogin;
     private ControladorPrincipal controlador;
 
@@ -31,8 +31,8 @@ public class VistaLogin {
         JLabel etiquetaUsuario = new JLabel("Usuario:");
         campoUsuario = new JTextField();
         
-        JLabel etiquetaContraseña = new JLabel("Contraseña:");
-        campoContraseña = new JPasswordField();
+        JLabel etiquetacontrasenia = new JLabel("contrasenia:");
+        campoContrasenia = new JPasswordField();
         
         botonLogin = new JButton("Iniciar Sesión");
         botonLogin.addActionListener(new ActionListener() {
@@ -44,8 +44,8 @@ public class VistaLogin {
 
         frame.add(etiquetaUsuario);
         frame.add(campoUsuario);
-        frame.add(etiquetaContraseña);
-        frame.add(campoContraseña);
+        frame.add(etiquetacontrasenia);
+        frame.add(campoContrasenia);
         frame.add(new JLabel()); // Espacio vacío
         frame.add(botonLogin);
     }
@@ -69,14 +69,14 @@ public class VistaLogin {
      */
     public void onLoginClick() {
         String usuario = campoUsuario.getText();
-        String contraseña = new String(campoContraseña.getPassword());
+        String contrasenia = new String(campoContrasenia.getPassword());
 
-        // Aquí se debería validar el usuario y la contraseña
+        // Aquí se debería validar el usuario y la contrasenia
         // Simulamos un login exitoso con rol "ADMIN"
-        if (usuario.equals("admin") && contraseña.equals("admin123")) {
+        if (usuario.equals("admin") && contrasenia.equals("admin123")) {
             controlador.onLoginExitoso("ADMIN");
         } else {
-            JOptionPane.showMessageDialog(frame, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Usuario o contrasenia incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

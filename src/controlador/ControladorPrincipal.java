@@ -1,9 +1,16 @@
-import modelo.*;
-import vista.*;
+package src.controlador;
+
+import src.modelo.*;
+import src.vista.*;
+import java.sql.SQLException;
 
 public class ControladorPrincipal {
     private VistaLogin vistaLogin;
     private VistaMenuPrincipal vistaMenu;
+    private VistaInventario vistaInventario; // Agregar vistaInventario
+    private VistaVentas vistaVentas; // Agregar vistaVentas
+    private VistaPersonal vistaPersonal; // Agregar vistaPersonal
+    private VistaProveedores vistaProveedores; // Agregar vistaProveedores
     private ControladorInventario controladorInventario;
     private ControladorVentas controladorVentas;
     private ControladorPersonal controladorPersonal;
@@ -11,12 +18,20 @@ public class ControladorPrincipal {
 
     // Constructor
     public ControladorPrincipal(VistaLogin vistaLogin, VistaMenuPrincipal vistaMenu,
+                                VistaInventario vistaInventario, // Agregar parámetro
+                                VistaVentas vistaVentas, // Agregar parámetro
+                                VistaPersonal vistaPersonal, // Agregar parámetro
+                                VistaProveedores vistaProveedores, // Agregar parámetro
                                 ControladorInventario controladorInventario,
                                 ControladorVentas controladorVentas,
                                 ControladorPersonal controladorPersonal,
                                 ControladorProveedores controladorProveedores) {
         this.vistaLogin = vistaLogin;
         this.vistaMenu = vistaMenu;
+        this.vistaInventario = vistaInventario; // Inicializar
+        this.vistaVentas = vistaVentas; // Inicializar
+        this.vistaPersonal = vistaPersonal; // Inicializar
+        this.vistaProveedores = vistaProveedores; // Inicializar
         this.controladorInventario = controladorInventario;
         this.controladorVentas = controladorVentas;
         this.controladorPersonal = controladorPersonal;
@@ -24,6 +39,7 @@ public class ControladorPrincipal {
 
         // Configurar eventos de la vista de login
         this.vistaLogin.setControlador(this);
+        this.vistaMenu.setControlador(this); // Asegúrate de que el controlador se establezca en la vista del menú
     }
 
     /**
@@ -50,13 +66,7 @@ public class ControladorPrincipal {
      * @param rolUsuario Rol del usuario
      */
     private void configurarMenuPorRol(String rolUsuario) {
-        if (rolUsuario.equals("ADMIN")) {
-            vistaMenu.habilitarOpcionesAdministrativas();
-        } else if (rolUsuario.equals("VENDEDOR")) {
-            vistaMenu.habilitarOpcionesVentas();
-        } else if (rolUsuario.equals("GERENTE")) {
-            vistaMenu.habilitarOpcionesGerenciales();
-        }
+        vistaMenu.habilitarOpcionesPorRol(rolUsuario);
     }
 
     /**

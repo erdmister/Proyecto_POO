@@ -1,7 +1,7 @@
-package vista;
+package src.vista;
 
-import controlador.*;
-import modelo.*;
+import src.controlador.*;
+import src.modelo.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -18,6 +18,15 @@ public class VistaPersonal {
     private JButton botonRegresar;
     private ControladorPersonal controlador;
     private DefaultTableModel modeloTabla;
+
+    // Campos para el formulario de agregar/editar empleado
+    private JTextField campoNombre;
+    private JTextField campoRfc;
+    private JTextField campoTelefono;
+    private JTextField campoEmail;
+    private JComboBox<String> comboRol;
+    private JTextField campoSucursal;
+    private JCheckBox checkActivo;
 
     public VistaPersonal() {
         inicializarComponentes();
@@ -100,13 +109,14 @@ public class VistaPersonal {
         dialogo.setLayout(new GridLayout(8, 2, 5, 5));
         dialogo.setSize(500, 400);
 
-        JTextField campoNombre = new JTextField();
-        JTextField campoRfc = new JTextField();
-        JTextField campoTelefono = new JTextField();
-        JTextField campoEmail = new JTextField();
-        JComboBox<String> comboRol = new JComboBox<>(new String[]{"ADMIN", "GERENTE", "VENDEDOR"});
-        JTextField campoSucursal = new JTextField();
-        JCheckBox checkActivo = new JCheckBox("Activo", true);
+        // Inicializar campos del formulario
+        campoNombre = new JTextField();
+        campoRfc = new JTextField();
+        campoTelefono = new JTextField();
+        campoEmail = new JTextField();
+        comboRol = new JComboBox<>(new String[]{"ADMIN", "GERENTE", "VENDEDOR"});
+        campoSucursal = new JTextField();
+        checkActivo = new JCheckBox("Activo", true);
 
         // Agregar componentes al diálogo
         agregarCampo(dialogo, "Nombre:", campoNombre);
@@ -163,8 +173,56 @@ public class VistaPersonal {
         String sucursal = (String) modeloTabla.getValueAt(filaSeleccionada, 6);
         boolean activo = modeloTabla.getValueAt(filaSeleccionada, 7).equals("Activo");
 
-        // Diálogo para editar empleado (similar a onAgregarClick pero con datos precargados)
-        // ... (implementación similar a onAgregarClick pero con datos precargados)
+        // Diálogo para editar empleado
+        JDialog dialogo = new JDialog(frame, "Editar Empleado", true);
+        dialogo.setLayout(new GridLayout(8, 2, 5, 5));
+        dialogo.setSize(500, 400);
+
+        // Inicializar campos del formulario con datos existentes
+        campoNombre = new JTextField(nombre);
+        campoRfc = new JTextField(rfc);
+        campoTelefono = new JTextField(telefono);
+        campoEmail = new JTextField(email);
+        comboRol = new JComboBox<>(new String[]{"ADMIN", "GERENTE", "VENDEDOR"});
+        comboRol.setSelectedItem(rol);
+        campoSucursal = new JTextField(sucursal);
+        checkActivo = new JCheckBox("Activo", activo);
+
+        // Agregar componentes al diálogo
+        agregarCampo(dialogo, "Nombre:", campoNombre);
+        agregarCampo(dialogo, "RFC:", campoRfc);
+        agregarCampo(dialogo, "Teléfono:", campoTelefono);
+        agregarCampo(dialogo, "Email:", campoEmail);
+        agregarCampo(dialogo, "Rol:", comboRol);
+        agregarCampo(dialogo, "Sucursal:", campoSucursal);
+        dialogo.add(new JLabel("Estado:"));
+        dialogo.add(checkActivo);
+
+        JButton botonConfirmar = new JButton("Guardar");
+        botonConfirmar.addActionListener(ev -> {
+            Empleado empleadoEditado = new Empleado(
+                id, // ID existente
+                campoNombre.getText(),
+                campoRfc.getText(),
+                campoTelefono.getText(),
+                comboRol.getSelectedItem().toString(),
+                campoSucursal.getText(),
+                campoEmail.getText(),
+                checkActivo.isSelected()
+            );
+            
+            if (controlador != null) {
+                controlador.editarEmpleado(empleadoEditado);
+            }
+            dialogo.dispose();
+        });
+
+        JButton botonCancelar = new JButton("Cancelar");
+        botonCancelar.addActionListener(ev -> dialogo.dispose());
+
+        dialogo.add(botonConfirmar);
+        dialogo.add(botonCancelar);
+        dialogo.setVisible(true);
     }
 
     private void onEliminarClick(ActionEvent e) {
@@ -213,5 +271,18 @@ public class VistaPersonal {
 
     public void setControlador(ControladorPersonal controlador) {
         this.controlador = controlador;
+    }
+	
+    public void limpiarFormulario() {
+        // Limpiar los campos del formulario
+        if (campoNombre != null) campoNombre.setText("");
+        if (campoRfc != null) campoRfc.setText("");
+        if (campoTelefono != null) campoTelefono.setText("");
+        if (campoEmail != null) campoEmail.setText("");
+        if (campoSucursal != null) campoSucursal.setText("");
+        if (checkActivo != null) checkActivo.setSelected(true); // Restablecer a "Activo"
+        
+        // Opcional: Deseleccionar fila en tabla si existe
+        tablaEmpleados.clearSelection();
     }
 }

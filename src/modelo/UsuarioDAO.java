@@ -1,4 +1,4 @@
-package modelo;
+package src.modelo;
 
 import java.sql.*;
 
@@ -30,9 +30,9 @@ public class UsuarioDAO {
     }
     
     // Valida las credenciales del usuario
-    public boolean validarCredenciales(String nombreUsuario, String contraseña) throws SQLException {
+    public boolean validarCredenciales(String nombreUsuario, String contrasenia) throws SQLException {
         Usuario usuario = obtenerUsuario(nombreUsuario);
-        return usuario != null && usuario.autenticar(contraseña);
+        return usuario != null && usuario.autenticar(contrasenia);
     }
     
     // Método adicional: crear usuario (para pruebas)
@@ -41,7 +41,7 @@ public class UsuarioDAO {
         
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, usuario.getNombreUsuario());
-            stmt.setString(2, usuario.getContraseña());
+            stmt.setString(2, usuario.getContrasenia());
             stmt.setString(3, usuario.getRol());
             
             return stmt.executeUpdate() > 0;

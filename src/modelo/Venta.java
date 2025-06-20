@@ -1,4 +1,4 @@
-package modelo;
+package src.modelo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,29 +18,29 @@ public class Venta {
         this.fecha = new Date();
     }
 
-    public Venta(int id, Date fecha, List<ItemVenta> items, double total, int empleadoId, String metodoPago) {
+    public Venta(int id, Date fecha, List<ItemVenta> items, int empleadoId, String metodoPago) {
         this.id = id;
         this.fecha = fecha;
         this.items = items;
-        this.total = total;
         this.empleadoId = empleadoId;
         this.metodoPago = metodoPago;
+        calcularTotal(); // Calcular el total al crear la venta
     }
 
     // Métodos para manipular items
     public void agregarItem(ItemVenta item) {
         this.items.add(item);
-        calcularTotal();
+        calcularTotal(); // Actualiza el total al agregar un ítem
     }
 
     public void quitarItem(ItemVenta item) {
         this.items.remove(item);
-        calcularTotal();
+        calcularTotal(); // Actualiza el total al quitar un ítem
     }
 
     private void calcularTotal() {
         this.total = items.stream()
-                .mapToDouble(ItemVenta::getSubtotal)
+                .mapToDouble(ItemVenta::getSubtotal) // Suma los subtotales de los ítems
                 .sum();
     }
 
@@ -67,11 +67,11 @@ public class Venta {
 
     public void setItems(List<ItemVenta> items) {
         this.items = items;
-        calcularTotal();
+        calcularTotal(); // Actualiza el total al establecer una nueva lista de ítems
     }
 
     public double getTotal() {
-        return total;
+        return total; // Devuelve el total calculado
     }
 
     public int getEmpleadoId() {

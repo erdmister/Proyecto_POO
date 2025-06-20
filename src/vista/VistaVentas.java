@@ -1,7 +1,7 @@
-package vista;
+package src.vista;
 
-import controlador.*;
-import modelo.*;
+import src.controlador.*;
+import src.modelo.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -145,6 +145,14 @@ public class VistaVentas {
 
         botonEliminarItem.addActionListener(ev -> {
             // Implementar lógica para quitar items seleccionados
+            int filaSeleccionada = tablaItems.getSelectedRow();
+            if (filaSeleccionada != -1) {
+                ((DefaultTableModel) tablaItems.getModel()).removeRow(filaSeleccionada);
+                // Actualizar total
+                actualizarTotalVenta(tablaItems, etiquetaTotalVenta);
+            } else {
+                mostrarMensaje("Seleccione un producto para quitar.");
+            }
         });
 
         botonConfirmar.addActionListener(ev -> {
@@ -155,6 +163,15 @@ public class VistaVentas {
         botonCancelar.addActionListener(ev -> dialogo.dispose());
 
         dialogo.setVisible(true);
+    }
+
+    private void actualizarTotalVenta(JTable tablaItems, JLabel etiquetaTotalVenta) {
+        double total = 0;
+        DefaultTableModel modelo = (DefaultTableModel) tablaItems.getModel();
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            total += (double) modelo.getValueAt(i, 4); // Suponiendo que el subtotal está en la columna 4
+        }
+        etiquetaTotalVenta.setText(String.format("Total: $%.2f", total));
     }
 
     private void onDetallesClick(ActionEvent e) {
@@ -187,5 +204,13 @@ public class VistaVentas {
 
     public void setControlador(ControladorVentas controlador) {
         this.controlador = controlador;
+    }
+	
+    public void limpiarFormulario() {
+        // Limpiar tabla de items de venta
+        modeloTabla.setRowCount(0);
+        
+        // Restablecer total a 0
+        etiquetaTotal.setText("Total del día: $0.00");
     }
 }

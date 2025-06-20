@@ -1,4 +1,4 @@
-package modelo;
+package src.modelo;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class ProveedorDAO {
         
         try (PreparedStatement stmt = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, proveedor.getNombre());
-            stmt.setString(2, proveedor.getrfc());
+            stmt.setString(2, proveedor.getRfc());
             stmt.setString(3, proveedor.getTelefono());
             stmt.setString(4, proveedor.getEmail());
             stmt.setString(5, proveedor.getDireccion());
@@ -88,7 +88,7 @@ public class ProveedorDAO {
         
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, proveedor.getNombre());
-            stmt.setString(2, proveedor.getrfc());
+            stmt.setString(2, proveedor.getRfc());
             stmt.setString(3, proveedor.getTelefono());
             stmt.setString(4, proveedor.getEmail());
             stmt.setString(5, proveedor.getDireccion());
