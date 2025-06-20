@@ -68,6 +68,10 @@ public class ControladorPrincipal {
     private void configurarMenuPorRol(String rolUsuario) {
         vistaMenu.habilitarOpcionesPorRol(rolUsuario);
     }
+	
+	public void volverAMenu() {
+		vistaMenu.mostrar();
+	}
 
     /**
      * Muestra la vista de inventario
@@ -75,6 +79,7 @@ public class ControladorPrincipal {
     public void mostrarVistaInventario() {
         controladorInventario.actualizarVista();
         vistaMenu.ocultar();
+		vistaInventario.setControladorPadre(this);  // Nueva línea
         vistaInventario.mostrar();
     }
 
@@ -84,6 +89,7 @@ public class ControladorPrincipal {
     public void mostrarVistaVentas() {
         controladorVentas.obtenerVentasDiarias(); // Cargar ventas del día
         vistaMenu.ocultar();
+		vistaVentas.setControladorPadre(this);  // Nueva línea
         vistaVentas.mostrar();
     }
 
@@ -93,6 +99,7 @@ public class ControladorPrincipal {
     public void mostrarVistaPersonal() {
         controladorPersonal.actualizarListaEmpleados(); // Cargar empleados
         vistaMenu.ocultar();
+		vistaPersonal.setControladorPadre(this);
         vistaPersonal.mostrar();
     }
 
@@ -102,6 +109,7 @@ public class ControladorPrincipal {
     public void mostrarVistaProveedores() {
         controladorProveedores.actualizarListaProveedores(); // Cargar proveedores
         vistaMenu.ocultar();
+		vistaProveedores.setControladorPadre(this);
         vistaProveedores.mostrar();
     }
 }

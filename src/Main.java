@@ -16,13 +16,14 @@ public class Main {
         String contrasenia = "123456.d.a1.";
         
         Connection conexion = null; // Declarar la conexión fuera del bloque try
+		
 
         try {
             // Registrar el driver JDBC
             Class.forName("com.mysql.cj.jdbc.Driver");
             
             // Establecer la conexión
-            conexion = DriverManager.getConnection(url, usuario, contrasenia); // No usar try-with-resources
+            conexion = DriverManager.getConnection(url, usuario, contrasenia); 
             
             // Inicialización de DAOs
             ProductoDAO productoDAO = new ProductoDAO(conexion);

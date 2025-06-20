@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class VistaProveedores {
@@ -17,6 +18,7 @@ public class VistaProveedores {
     private JButton botonBuscar;
     private JButton botonRegresar;
     private ControladorProveedores controlador;
+    private ControladorPrincipal controladorPadre;
     private DefaultTableModel modeloTabla;
 
     // Campos para el formulario de agregar/editar proveedor
@@ -29,6 +31,10 @@ public class VistaProveedores {
 
     public VistaProveedores() {
         inicializarComponentes();
+    }
+
+    public void setControladorPadre(ControladorPrincipal controlador) {
+        this.controladorPadre = controlador;
     }
 
     private void inicializarComponentes() {
@@ -54,31 +60,59 @@ public class VistaProveedores {
 
         // Panel de botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        
+
         // Botón Agregar
         botonAgregar = new JButton("Agregar");
         botonAgregar.setFont(new Font("Arial", Font.PLAIN, 14));
-        botonAgregar.addActionListener(this::onAgregarClick);
-        
+        botonAgregar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onAgregarClick(e);
+            }
+        });
+
         // Botón Editar
         botonEditar = new JButton("Editar");
         botonEditar.setFont(new Font("Arial", Font.PLAIN, 14));
-        botonEditar.addActionListener(this::onEditarClick);
-        
+        botonEditar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onEditarClick(e);
+            }
+        });
+
         // Botón Eliminar
         botonEliminar = new JButton("Eliminar");
         botonEliminar.setFont(new Font("Arial", Font.PLAIN, 14));
-        botonEliminar.addActionListener(this::onEliminarClick);
-        
+        botonEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onEliminarClick(e);
+            }
+        });
+
         // Botón Buscar
         botonBuscar = new JButton("Buscar");
         botonBuscar.setFont(new Font("Arial", Font.PLAIN, 14));
-        botonBuscar.addActionListener(this::onBuscarClick);
-        
+        botonBuscar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onBuscarClick(e);
+            }
+        });
+
         // Botón Regresar
         botonRegresar = new JButton("Regresar");
         botonRegresar.setFont(new Font("Arial", Font.PLAIN, 14));
-        botonRegresar.addActionListener(e -> frame.dispose());
+        botonRegresar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                if (controladorPadre != null) {
+                    controladorPadre.volverAMenu();
+                }
+            }
+        });
 
         // Agregar botones al panel
         panelBotones.add(botonAgregar);
@@ -98,10 +132,10 @@ public class VistaProveedores {
 
     public void mostrarProveedores(List<Proveedor> proveedores) {
         modeloTabla.setRowCount(0); // Limpiar tabla
-        
+
         for (Proveedor proveedor : proveedores) {
             String productos = String.join(", ", proveedor.getProductosSuministrados());
-            
+
             Object[] fila = {
                 proveedor.getId(),
                 proveedor.getNombre(),
@@ -142,23 +176,31 @@ public class VistaProveedores {
 
         // Botones
         JButton botonGuardar = new JButton("Guardar");
-        botonGuardar.addActionListener(ev -> {
-            Proveedor nuevo = new Proveedor();
-            nuevo.setNombre(campoNombre.getText());
-            nuevo.setRfc(campoRfc.getText());
-            nuevo.setTelefono(campoTelefono.getText());
-            nuevo.setEmail(campoEmail.getText());
-            nuevo.setDireccion(campoDireccion.getText());
-            nuevo.setProductosSuministrados(List.of(areaProductos.getText().split(",")));
+        botonGuardar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                Proveedor nuevo = new Proveedor();
+                nuevo.setNombre(campoNombre.getText());
+                nuevo.setRfc(campoRfc.getText());
+                nuevo.setTelefono(campoTelefono.getText());
+                nuevo.setEmail(campoEmail.getText());
+                nuevo.setDireccion(campoDireccion.getText());
+                nuevo.setProductosSuministrados(List.of(areaProductos.getText().split(",")));
 
-            if (controlador != null) {
-                controlador.agregarProveedor(nuevo);
+                if (controlador != null) {
+                    controlador.agregarProveedor(nuevo);
+                }
+                dialogo.dispose();
             }
-            dialogo.dispose();
         });
 
         JButton botonCancelar = new JButton("Cancelar");
-        botonCancelar.addActionListener(ev -> dialogo.dispose());
+        botonCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                dialogo.dispose();
+            }
+        });
 
         dialogo.add(botonGuardar);
         dialogo.add(botonCancelar);
@@ -168,14 +210,14 @@ public class VistaProveedores {
     private void onEditarClick(ActionEvent e) {
         int filaSeleccionada = tablaProveedores.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(frame, "Seleccione un proveedor para editar", 
-                                        "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Seleccione un proveedor para editar",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         // Obtener ID del proveedor seleccionado
         int idProveedor = (int) modeloTabla.getValueAt(filaSeleccionada, 0);
-        
+
         // En una implementación real, aquí se obtendría el proveedor completo del controlador
         // Por ahora creamos un diálogo vacío
         JDialog dialogoEditar = new JDialog(frame, "Editar Proveedor", true);
@@ -186,8 +228,8 @@ public class VistaProveedores {
     private void onEliminarClick(ActionEvent e) {
         int filaSeleccionada = tablaProveedores.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(frame, "Seleccione un proveedor para eliminar", 
-                                        "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Seleccione un proveedor para eliminar",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -195,9 +237,9 @@ public class VistaProveedores {
         String nombreProveedor = (String) modeloTabla.getValueAt(filaSeleccionada, 1);
 
         int confirmacion = JOptionPane.showConfirmDialog(
-            frame, 
-            "¿Está seguro de eliminar al proveedor: " + nombreProveedor + "?", 
-            "Confirmar Eliminación", 
+            frame,
+            "¿Está seguro de eliminar al proveedor: " + nombreProveedor + "?",
+            "Confirmar Eliminación",
             JOptionPane.YES_NO_OPTION
         );
 
@@ -230,7 +272,7 @@ public class VistaProveedores {
     public void setControlador(ControladorProveedores controlador) {
         this.controlador = controlador;
     }
-	
+
     public void limpiarFormulario() {
         // Limpiar los campos del formulario
         if (campoNombre != null) campoNombre.setText("");
@@ -239,7 +281,7 @@ public class VistaProveedores {
         if (campoEmail != null) campoEmail.setText("");
         if (campoDireccion != null) campoDireccion.setText("");
         if (areaProductos != null) areaProductos.setText("");
-        
+
         // Opcional: Deseleccionar proveedor en tabla
         tablaProveedores.clearSelection();
     }

@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class VistaPersonal {
@@ -17,6 +18,7 @@ public class VistaPersonal {
     private JButton botonBuscar;
     private JButton botonRegresar;
     private ControladorPersonal controlador;
+    private ControladorPrincipal controladorPadre;
     private DefaultTableModel modeloTabla;
 
     // Campos para el formulario de agregar/editar empleado
@@ -30,6 +32,10 @@ public class VistaPersonal {
 
     public VistaPersonal() {
         inicializarComponentes();
+    }
+
+    public void setControladorPadre(ControladorPrincipal controlador) {
+        this.controladorPadre = controlador;
     }
 
     private void inicializarComponentes() {
@@ -55,21 +61,49 @@ public class VistaPersonal {
 
         // Panel de botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        
+
         botonAgregar = new JButton("Agregar");
-        botonAgregar.addActionListener(this::onAgregarClick);
-        
+        botonAgregar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onAgregarClick(e);
+            }
+        });
+
         botonEditar = new JButton("Editar");
-        botonEditar.addActionListener(this::onEditarClick);
-        
+        botonEditar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onEditarClick(e);
+            }
+        });
+
         botonEliminar = new JButton("Eliminar");
-        botonEliminar.addActionListener(this::onEliminarClick);
-        
+        botonEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onEliminarClick(e);
+            }
+        });
+
         botonBuscar = new JButton("Buscar");
-        botonBuscar.addActionListener(this::onBuscarClick);
-        
+        botonBuscar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onBuscarClick(e);
+            }
+        });
+
         botonRegresar = new JButton("Regresar");
-        botonRegresar.addActionListener(e -> frame.dispose());
+        botonRegresar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                if (controladorPadre != null) {
+                    controladorPadre.volverAMenu();
+                }
+            }
+        });
 
         panelBotones.add(botonAgregar);
         panelBotones.add(botonEditar);
@@ -88,7 +122,7 @@ public class VistaPersonal {
 
     public void mostrarEmpleados(List<Empleado> empleados) {
         modeloTabla.setRowCount(0); // Limpiar tabla
-        
+
         for (Empleado empleado : empleados) {
             Object[] fila = {
                 empleado.getId(),
@@ -129,26 +163,34 @@ public class VistaPersonal {
         dialogo.add(checkActivo);
 
         JButton botonConfirmar = new JButton("Guardar");
-        botonConfirmar.addActionListener(ev -> {
-            Empleado nuevo = new Empleado(
-                0, // ID se genera automáticamente
-                campoNombre.getText(),
-                campoRfc.getText(),
-                campoTelefono.getText(),
-                comboRol.getSelectedItem().toString(),
-                campoSucursal.getText(),
-                campoEmail.getText(),
-                checkActivo.isSelected()
-            );
-            
-            if (controlador != null) {
-                controlador.agregarEmpleado(nuevo);
+        botonConfirmar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                Empleado nuevo = new Empleado(
+                    0, // ID se genera automáticamente
+                    campoNombre.getText(),
+                    campoRfc.getText(),
+                    campoTelefono.getText(),
+                    comboRol.getSelectedItem().toString(),
+                    campoSucursal.getText(),
+                    campoEmail.getText(),
+                    checkActivo.isSelected()
+                );
+
+                if (controlador != null) {
+                    controlador.agregarEmpleado(nuevo);
+                }
+                dialogo.dispose();
             }
-            dialogo.dispose();
         });
 
         JButton botonCancelar = new JButton("Cancelar");
-        botonCancelar.addActionListener(ev -> dialogo.dispose());
+        botonCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                dialogo.dispose();
+            }
+        });
 
         dialogo.add(botonConfirmar);
         dialogo.add(botonCancelar);
@@ -158,8 +200,8 @@ public class VistaPersonal {
     private void onEditarClick(ActionEvent e) {
         int filaSeleccionada = tablaEmpleados.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(frame, "Seleccione un empleado para editar", 
-                                        "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Seleccione un empleado para editar",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -199,26 +241,34 @@ public class VistaPersonal {
         dialogo.add(checkActivo);
 
         JButton botonConfirmar = new JButton("Guardar");
-        botonConfirmar.addActionListener(ev -> {
-            Empleado empleadoEditado = new Empleado(
-                id, // ID existente
-                campoNombre.getText(),
-                campoRfc.getText(),
-                campoTelefono.getText(),
-                comboRol.getSelectedItem().toString(),
-                campoSucursal.getText(),
-                campoEmail.getText(),
-                checkActivo.isSelected()
-            );
-            
-            if (controlador != null) {
-                controlador.editarEmpleado(empleadoEditado);
+        botonConfirmar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                Empleado empleadoEditado = new Empleado(
+                    id, // ID existente
+                    campoNombre.getText(),
+                    campoRfc.getText(),
+                    campoTelefono.getText(),
+                    comboRol.getSelectedItem().toString(),
+                    campoSucursal.getText(),
+                    campoEmail.getText(),
+                    checkActivo.isSelected()
+                );
+
+                if (controlador != null) {
+                    controlador.editarEmpleado(empleadoEditado);
+                }
+                dialogo.dispose();
             }
-            dialogo.dispose();
         });
 
         JButton botonCancelar = new JButton("Cancelar");
-        botonCancelar.addActionListener(ev -> dialogo.dispose());
+        botonCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                dialogo.dispose();
+            }
+        });
 
         dialogo.add(botonConfirmar);
         dialogo.add(botonCancelar);
@@ -228,8 +278,8 @@ public class VistaPersonal {
     private void onEliminarClick(ActionEvent e) {
         int filaSeleccionada = tablaEmpleados.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(frame, "Seleccione un empleado para eliminar", 
-                                        "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Seleccione un empleado para eliminar",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -237,9 +287,9 @@ public class VistaPersonal {
         String nombre = (String) modeloTabla.getValueAt(filaSeleccionada, 1);
 
         int confirmacion = JOptionPane.showConfirmDialog(
-            frame, 
-            "¿Está seguro de marcar como inactivo al empleado: " + nombre + "?", 
-            "Confirmar", 
+            frame,
+            "¿Está seguro de marcar como inactivo al empleado: " + nombre + "?",
+            "Confirmar",
             JOptionPane.YES_NO_OPTION
         );
 
@@ -272,7 +322,7 @@ public class VistaPersonal {
     public void setControlador(ControladorPersonal controlador) {
         this.controlador = controlador;
     }
-	
+
     public void limpiarFormulario() {
         // Limpiar los campos del formulario
         if (campoNombre != null) campoNombre.setText("");
@@ -281,7 +331,7 @@ public class VistaPersonal {
         if (campoEmail != null) campoEmail.setText("");
         if (campoSucursal != null) campoSucursal.setText("");
         if (checkActivo != null) checkActivo.setSelected(true); // Restablecer a "Activo"
-        
+
         // Opcional: Deseleccionar fila en tabla si existe
         tablaEmpleados.clearSelection();
     }

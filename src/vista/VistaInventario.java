@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class VistaInventario {
@@ -17,10 +18,15 @@ public class VistaInventario {
     private JButton botonBuscar;
     private JButton botonRegresar;
     private ControladorInventario controlador;
+    private ControladorPrincipal controladorPadre;
     private DefaultTableModel modeloTabla;
 
     public VistaInventario() {
         inicializarComponentes();
+    }
+
+    public void setControladorPadre(ControladorPrincipal controlador) {
+        this.controladorPadre = controlador;
     }
 
     private void inicializarComponentes() {
@@ -46,21 +52,49 @@ public class VistaInventario {
 
         // Panel de botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        
+
         botonAgregar = new JButton("Agregar");
-        botonAgregar.addActionListener(e -> onAgregarClick());
-        
+        botonAgregar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onAgregarClick();
+            }
+        });
+
         botonEditar = new JButton("Editar");
-        botonEditar.addActionListener(e -> onEditarClick());
-        
+        botonEditar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onEditarClick();
+            }
+        });
+
         botonEliminar = new JButton("Eliminar");
-        botonEliminar.addActionListener(e -> onEliminarClick());
-        
+        botonEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onEliminarClick();
+            }
+        });
+
         botonBuscar = new JButton("Buscar");
-        botonBuscar.addActionListener(e -> onBuscarClick());
-        
+        botonBuscar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onBuscarClick();
+            }
+        });
+
         botonRegresar = new JButton("Regresar");
-        botonRegresar.addActionListener(e -> frame.dispose());
+        botonRegresar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                if (controladorPadre != null) {
+                    controladorPadre.volverAMenu();
+                }
+            }
+        });
 
         panelBotones.add(botonAgregar);
         panelBotones.add(botonEditar);
@@ -79,7 +113,7 @@ public class VistaInventario {
 
     public void mostrarProductos(List<Producto> productos) {
         modeloTabla.setRowCount(0); // Limpiar tabla
-        
+
         for (Producto producto : productos) {
             Object[] fila = {
                 producto.getId(),
@@ -117,29 +151,37 @@ public class VistaInventario {
         dialogo.add(campoFecha);
 
         JButton botonConfirmar = new JButton("Guardar");
-        botonConfirmar.addActionListener(e -> {
-            try {
-                Producto nuevo = new Producto(
-                    0, // ID se genera automáticamente
-                    campoNombre.getText(),
-                    Double.parseDouble(campoPrecio.getText()),
-                    Double.parseDouble(campoCosto.getText()),
-                    Integer.parseInt(campoStock.getText()),
-                    java.sql.Date.valueOf(campoFecha.getText())
-                );
-                
-                if (controlador != null) {
-                    controlador.agregarProducto(nuevo);
+        botonConfirmar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Producto nuevo = new Producto(
+                        0, // ID se genera automáticamente
+                        campoNombre.getText(),
+                        Double.parseDouble(campoPrecio.getText()),
+                        Double.parseDouble(campoCosto.getText()),
+                        Integer.parseInt(campoStock.getText()),
+                        java.sql.Date.valueOf(campoFecha.getText())
+                    );
+
+                    if (controlador != null) {
+                        controlador.agregarProducto(nuevo);
+                    }
+                    dialogo.dispose();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(dialogo, "Error en los datos: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                dialogo.dispose();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialogo, "Error en los datos: " + ex.getMessage(), 
-                                            "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         JButton botonCancelar = new JButton("Cancelar");
-        botonCancelar.addActionListener(e -> dialogo.dispose());
+        botonCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialogo.dispose();
+            }
+        });
 
         dialogo.add(botonConfirmar);
         dialogo.add(botonCancelar);
@@ -149,8 +191,8 @@ public class VistaInventario {
     private void onEditarClick() {
         int filaSeleccionada = tablaProductos.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(frame, "Seleccione un producto para editar", 
-                                        "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Seleccione un producto para editar",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -185,29 +227,37 @@ public class VistaInventario {
         dialogo.add(campoFecha);
 
         JButton botonConfirmar = new JButton("Guardar");
-        botonConfirmar.addActionListener(e -> {
-            try {
-                Producto editado = new Producto(
-                    id,
-                    campoNombre.getText(),
-                    Double.parseDouble(campoPrecio.getText()),
-                    Double.parseDouble(campoCosto.getText()),
-                    Integer.parseInt(campoStock.getText()),
-                    java.sql.Date.valueOf(campoFecha.getText())
-                );
-                
-                if (controlador != null) {
-                    controlador.actualizarProducto(editado);
+        botonConfirmar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Producto editado = new Producto(
+                        id,
+                        campoNombre.getText(),
+                        Double.parseDouble(campoPrecio.getText()),
+                        Double.parseDouble(campoCosto.getText()),
+                        Integer.parseInt(campoStock.getText()),
+                        java.sql.Date.valueOf(campoFecha.getText())
+                    );
+
+                    if (controlador != null) {
+                        controlador.actualizarProducto(editado);
+                    }
+                    dialogo.dispose();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(dialogo, "Error en los datos: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                dialogo.dispose();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialogo, "Error en los datos: " + ex.getMessage(), 
-                                            "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         JButton botonCancelar = new JButton("Cancelar");
-        botonCancelar.addActionListener(e -> dialogo.dispose());
+        botonCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialogo.dispose();
+            }
+        });
 
         dialogo.add(botonConfirmar);
         dialogo.add(botonCancelar);
@@ -217,8 +267,8 @@ public class VistaInventario {
     private void onEliminarClick() {
         int filaSeleccionada = tablaProductos.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(frame, "Seleccione un producto para eliminar", 
-                                        "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Seleccione un producto para eliminar",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -226,9 +276,9 @@ public class VistaInventario {
         String nombre = (String) modeloTabla.getValueAt(filaSeleccionada, 1);
 
         int confirmacion = JOptionPane.showConfirmDialog(
-            frame, 
-            "¿Está seguro de eliminar el producto: " + nombre + "?", 
-            "Confirmar Eliminación", 
+            frame,
+            "¿Está seguro de eliminar el producto: " + nombre + "?",
+            "Confirmar Eliminación",
             JOptionPane.YES_NO_OPTION
         );
 
@@ -256,7 +306,7 @@ public class VistaInventario {
     public void setControlador(ControladorInventario controlador) {
         this.controlador = controlador;
     }
-	
+
     public void limpiarFormulario() {
         // Limpiar la tabla de productos
         modeloTabla.setRowCount(0);

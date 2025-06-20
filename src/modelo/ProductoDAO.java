@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ProductoDAO {
     private Connection conexion;
 
@@ -11,27 +12,37 @@ public class ProductoDAO {
         this.conexion = conexion;
     }
 
-    public List<Producto> obtenerTodosProductos() throws SQLException {
-        List<Producto> productos = new ArrayList<>();
-        String sql = "SELECT * FROM productos";
+public List<Producto> obtenerTodosProductos() throws SQLException {
+    List<Producto> productos = new ArrayList<>();
+    String sql = "SELECT * FROM productos";
+   
+
+    try (PreparedStatement stmt = conexion.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
         
-        try (PreparedStatement stmt = conexion.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
-            while (rs.next()) {
-                Producto producto = new Producto(
-                    rs.getInt("id"),
-                    rs.getString("nombre"),
-                    rs.getDouble("precio"),
-                    rs.getDouble("costo"),
-                    rs.getInt("stock"),
-                    rs.getDate("fecha_caducidad")
-                );
-                productos.add(producto);
-            }
+        System.out.println("Ejecutando consulta para obtener productos...");
+        
+        while (rs.next()) {
+            Producto producto = new Producto(
+                rs.getInt("id"),
+                rs.getString("nombre"),
+                rs.getDouble("precio"),
+                rs.getDouble("costo"),
+                rs.getInt("stock"),
+                rs.getDate("fecha_caducidad")
+            );
+            productos.add(producto);
         }
-        return productos;
+        
+        System.out.println("Número de productos obtenidos: " + productos.size());
+    } catch (SQLException e) {
+        System.err.println("Error al ejecutar la consulta: " + e.getMessage());
+        throw e; // Vuelve a lanzar la excepción para que sea manejada en el controlador
     }
+    
+    return productos;
+}
+
 
     public Producto obtenerProductoPorId(int id) throws SQLException {
         String sql = "SELECT * FROM productos WHERE id = ?";

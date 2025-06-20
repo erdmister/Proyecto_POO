@@ -88,14 +88,16 @@ public class ControladorInventario {
     /**
      * Actualiza la vista con los productos actuales
      */
-    public void actualizarVista() {
-        try {
-            List<Producto> productos = productoDAO.obtenerTodosProductos();
-            vistaInventario.mostrarProductos(productos);
-        } catch (SQLException e) {
-            vistaInventario.mostrarError("Error al cargar productos: " + e.getMessage());
-        }
-    }
+   public void actualizarVista() {
+       try {
+           System.out.println("Intentando obtener productos...");
+           List<Producto> productos = productoDAO.obtenerTodosProductos();
+           System.out.println("Productos obtenidos: " + productos.size());
+           vistaInventario.mostrarProductos(productos);
+       } catch (SQLException e) {
+           vistaInventario.mostrarError("Error al cargar productos: " + e.getMessage());
+       }
+   }
 
     // Método para inicializar el controlador
     public void iniciar() {

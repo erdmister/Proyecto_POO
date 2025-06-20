@@ -7,6 +7,9 @@ public class UsuarioDAO {
     
     public UsuarioDAO(Connection conexion) {
         this.conexion = conexion;
+				if (conexion != null) {
+			System.out.println("Conexión establecida con éxito.producto");
+		}
     }
     
     // Obtiene un usuario por su nombre de usuario
